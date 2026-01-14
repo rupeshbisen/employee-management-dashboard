@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Next.js
+.next/
+out/
+
+# Production
+build/
+dist/
+
+# Misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+*.log
+
+# Environment variables
+.env*
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
