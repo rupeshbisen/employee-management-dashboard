@@ -65,8 +65,8 @@ const states = [
 
 export default function EmployeeForm({
   employee,
-  onSubmit,
   onCancel,
+  onSubmit,
 }: EmployeeFormProps) {
   const [formData, setFormData] = useState<Omit<Employee, 'id'>>({
     fullName: '',
@@ -131,38 +131,103 @@ export default function EmployeeForm({
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div className="mt-3">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            {employee ? 'Edit Employee' : 'Add Employee'}
-          </h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto backdrop-blur-sm bg-black bg-opacity-30 p-4 sm:p-0"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onCancel();
+        }
+      }}
+    >
+      <div className="relative w-full max-w-2xl rounded-3xl bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 z-10 rounded-t-3xl bg-linear-to-r from-purple-600 to-pink-600 px-6 py-6 sm:px-8 sm:py-8">
+          <div className="flex items-center justify-between">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              />
-              {errors.fullName && (
-                <p className="text-red-500 text-sm">{errors.fullName}</p>
-              )}
+              <h3 className="text-xl font-bold text-white sm:text-2xl">
+                {employee ? 'Edit Employee' : 'Add Employee'}
+              </h3>
+              <p className="mt-1 text-sm text-white text-opacity-90">
+                {employee
+                  ? 'Update employee information'
+                  : 'Add a new employee to your system'}
+              </p>
             </div>
+            <button
+              className="ml-auto inline-flex rounded-full bg-white bg-opacity-20 p-1.5 text-white hover:bg-opacity-30 transition"
+              onClick={onCancel}
+              type="button"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M6 18L18 6M6 6l12 12"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
 
+        {/* Form Content */}
+        <form className="space-y-6 p-6 sm:p-8" onSubmit={handleSubmit}>
+          {/* Full Name */}
+          <div>
+            <label
+              className="mb-2 block text-sm font-semibold text-gray-700"
+              htmlFor="fullName"
+            >
+              Full Name
+            </label>
+            <input
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
+              id="fullName"
+              name="fullName"
+              onChange={handleChange}
+              placeholder="Enter full name"
+              type="text"
+              value={formData.fullName}
+            />
+            {errors.fullName && (
+              <p className="mt-2 flex items-center text-sm text-red-500">
+                <svg
+                  className="mr-1 h-4 w-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clipRule="evenodd"
+                    d="M18.101 12.93a1 1 0 00-1.414-1.414L10 18.586l-6.687-6.687a1 1 0 00-1.414 1.414L8.586 20 10 21.414l8.101-8.484z"
+                    fillRule="evenodd"
+                  />
+                </svg>
+                {errors.fullName}
+              </p>
+            )}
+          </div>
+
+          {/* Gender and DOB */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Gender */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label
+                className="mb-2 block text-sm font-semibold text-gray-700"
+                htmlFor="gender"
+              >
                 Gender
               </label>
               <select
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 transition duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
+                id="gender"
                 name="gender"
-                value={formData.gender}
                 onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                value={formData.gender}
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -170,93 +235,172 @@ export default function EmployeeForm({
               </select>
             </div>
 
+            {/* Date of Birth */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label
+                className="mb-2 block text-sm font-semibold text-gray-700"
+                htmlFor="dob"
+              >
                 Date of Birth
               </label>
               <input
-                type="date"
+                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
+                id="dob"
                 name="dob"
-                value={formData.dob}
                 onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                type="date"
+                value={formData.dob}
               />
               {errors.dob && (
-                <p className="text-red-500 text-sm">{errors.dob}</p>
+                <p className="mt-2 flex items-center text-sm text-red-500">
+                  <svg
+                    className="mr-1 h-4 w-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      d="M18.101 12.93a1 1 0 00-1.414-1.414L10 18.586l-6.687-6.687a1 1 0 00-1.414 1.414L8.586 20 10 21.414l8.101-8.484z"
+                      fillRule="evenodd"
+                    />
+                  </svg>
+                  {errors.dob}
+                </p>
               )}
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Profile Image
-              </label>
+          {/* Profile Image */}
+          <div>
+            <label
+              className="mb-2 block text-sm font-semibold text-gray-700"
+              htmlFor="profileImage"
+            >
+              Profile Image
+            </label>
+            <div className="cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-6 text-center transition duration-200 hover:border-purple-500 hover:bg-purple-50">
               <input
-                type="file"
                 accept="image/*"
+                className="hidden"
+                id="profileImage"
                 onChange={handleImageChange}
-                className="mt-1 block w-full"
+                type="file"
               />
-              {imagePreview && (
-                <Image
-                  src={imagePreview}
-                  alt="Preview"
-                  width={80}
-                  height={80}
-                  className="mt-2 rounded-full object-cover"
-                />
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                State
+              <label className="cursor-pointer" htmlFor="profileImage">
+                <div className="space-y-2">
+                  {imagePreview ? (
+                    <div className="flex justify-center">
+                      <Image
+                        alt="Preview"
+                        className="rounded-full border-4 border-purple-200 object-cover"
+                        height={100}
+                        src={imagePreview}
+                        width={100}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <svg
+                        className="mx-auto h-12 w-12 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 48 48"
+                      >
+                        <path
+                          d="M28 8H12a4 4 0 00-4 4v20a4 4 0 004 4h24a4 4 0 004-4V20m-14-8l-4-4m0 0l-4 4m4-4v12m8 0a4 4 0 11-8 0 4 4 0 018 0z"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                        />
+                      </svg>
+                      <p className="text-sm text-gray-600">
+                        Click to upload image
+                      </p>
+                    </>
+                  )}
+                </div>
               </label>
-              <select
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              >
-                <option value="">Select State</option>
-                {states.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
-              </select>
-              {errors.state && (
-                <p className="text-red-500 text-sm">{errors.state}</p>
-              )}
             </div>
+          </div>
 
-            <div className="flex items-center">
+          {/* State */}
+          <div>
+            <label
+              className="mb-2 block text-sm font-semibold text-gray-700"
+              htmlFor="state"
+            >
+              State
+            </label>
+            <select
+              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 transition duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
+              id="state"
+              name="state"
+              onChange={handleChange}
+              value={formData.state}
+            >
+              <option value="">Select State</option>
+              {states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+            {errors.state && (
+              <p className="mt-2 flex items-center text-sm text-red-500">
+                <svg
+                  className="mr-1 h-4 w-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clipRule="evenodd"
+                    d="M18.101 12.93a1 1 0 00-1.414-1.414L10 18.586l-6.687-6.687a1 1 0 00-1.414 1.414L8.586 20 10 21.414l8.101-8.484z"
+                    fillRule="evenodd"
+                  />
+                </svg>
+                {errors.state}
+              </p>
+            )}
+          </div>
+
+          {/* Active Status */}
+          <div className="rounded-lg bg-linear-to-r from-purple-50 to-pink-50 p-4 border border-purple-200">
+            <label className="flex cursor-pointer items-center">
               <input
-                type="checkbox"
-                name="isActive"
                 checked={formData.isActive}
+                className="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                name="isActive"
                 onChange={handleChange}
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                type="checkbox"
               />
-              <label className="ml-2 block text-sm text-gray-900">Active</label>
-            </div>
+              <span className="ml-3 text-sm font-medium text-gray-700">
+                Mark as Active
+              </span>
+            </label>
+            <p className="mt-2 text-xs text-gray-600">
+              {formData.isActive
+                ? 'Employee is active'
+                : 'Employee is inactive'}
+            </p>
+          </div>
 
-            <div className="flex justify-end space-x-2">
-              <button
-                type="button"
-                onClick={onCancel}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700"
-              >
-                {employee ? 'Update' : 'Add'}
-              </button>
-            </div>
-          </form>
-        </div>
+          {/* Buttons */}
+          <div className="flex gap-3 border-t border-gray-200 pt-6">
+            <button
+              className="flex-1 rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm font-medium text-gray-700 transition duration-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              onClick={onCancel}
+              type="button"
+            >
+              Cancel
+            </button>
+            <button
+              className="flex-1 rounded-lg border border-transparent bg-linear-to-r from-purple-600 to-pink-600 px-4 py-2.5 text-sm font-medium text-white transition duration-200 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+              type="submit"
+            >
+              {employee ? 'Update Employee' : 'Add Employee'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

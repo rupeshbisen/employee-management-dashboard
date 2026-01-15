@@ -19,20 +19,105 @@
   }
 }
 
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom form styling */
+input,
+select,
+textarea {
+  @apply transition-all duration-200;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  @apply ring-2 ring-indigo-500;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-gray-300 hover:bg-gray-400;
+}
+
+/* Print styles */
 @media print {
   .no-print {
     display: none !important;
   }
+
   body {
     font-size: 12px;
+    @apply bg-white;
   }
+
   table {
     width: 100%;
     border-collapse: collapse;
   }
+
   th,
   td {
     border: 1px solid #000;
     padding: 8px;
+    @apply text-left;
   }
+
+  th {
+    @apply bg-gray-100 font-bold;
+  }
+
+  /* Hide images in print mode except necessary ones */
+  img {
+    max-width: 50px;
+  }
+
+  /* Ensure no page breaks in the middle of rows */
+  tr {
+    page-break-inside: avoid;
+  }
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  body {
+    @apply text-sm;
+  }
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+}
+
+/* Button transition effects */
+button {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+button:active {
+  @apply scale-95;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply -translate-y-1 shadow-lg;
 }
