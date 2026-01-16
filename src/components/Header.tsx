@@ -22,7 +22,7 @@ export default function Header() {
               <svg
                 className="h-4 w-4 text-white"
                 fill="none"
-                stroke="currentColor"
+                stroke="white"
                 viewBox="0 0 24 24"
               >
                 <path

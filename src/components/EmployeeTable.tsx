@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Employee } from '@/types/employee';
 import { getEmployees, saveEmployees } from '@/utils/storage';
 import EmployeeForm from './EmployeeForm';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 interface EmployeeTableProps {
   searchTerm: string;
@@ -20,6 +21,9 @@ export default function EmployeeTable({
   const [employees, setEmployees] = useState<Employee[]>(getEmployees());
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [deletingEmployee, setDeletingEmployee] = useState<Employee | null>(
+    null
+  );
 
   const filteredEmployees = employees.filter((emp) => {
     const matchesSearch = emp.fullName
@@ -32,12 +36,21 @@ export default function EmployeeTable({
     return matchesSearch && matchesGender && matchesStatus;
   });
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this employee?')) {
-      const updated = employees.filter((emp) => emp.id !== id);
+  const handleDeleteClick = (employee: Employee) => {
+    setDeletingEmployee(employee);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deletingEmployee) {
+      const updated = employees.filter((emp) => emp.id !== deletingEmployee.id);
       setEmployees(updated);
       saveEmployees(updated);
+      setDeletingEmployee(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeletingEmployee(null);
   };
 
   const handleToggleStatus = (id: string) => {
@@ -58,6 +71,19 @@ export default function EmployeeTable({
     setShowForm(true);
   };
 
+  const generateShortId = (): string => {
+    if (employees.length === 0) return '1';
+    // Find the highest numeric ID and increment
+    const numericIds = employees
+      .map((emp) => {
+        const num = parseInt(emp.id, 10);
+        return isNaN(num) ? 0 : num;
+      })
+      .filter((id) => id > 0);
+    const maxId = numericIds.length > 0 ? Math.max(...numericIds) : 0;
+    return (maxId + 1).toString();
+  };
+
   const handleFormSubmit = (employee: Employee) => {
     let updated;
     if (editingEmployee) {
@@ -65,7 +91,7 @@ export default function EmployeeTable({
         emp.id === employee.id ? employee : emp
       );
     } else {
-      updated = [...employees, { ...employee, id: Date.now().toString() }];
+      updated = [...employees, { ...employee, id: generateShortId() }];
     }
     setEmployees(updated);
     saveEmployees(updated);
@@ -196,8 +222,13 @@ export default function EmployeeTable({
                   key={employee.id}
                 >
                   <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900 sm:px-6">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">
-                      {employee.id}
+                    <span
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700"
+                      title={`ID: ${employee.id}`}
+                    >
+                      {employee.id.length <= 3
+                        ? employee.id
+                        : `#${employee.id.slice(-2)}`}
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-4 py-4 sm:px-6">
@@ -274,7 +305,7 @@ export default function EmployeeTable({
                       </button>
                       <button
                         className="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition duration-200 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                        onClick={() => handleDelete(employee.id)}
+                        onClick={() => handleDeleteClick(employee)}
                         title="Delete employee"
                       >
                         <svg
@@ -306,6 +337,14 @@ export default function EmployeeTable({
           employee={editingEmployee}
           onCancel={() => setShowForm(false)}
           onSubmit={handleFormSubmit}
+        />
+      )}
+
+      {deletingEmployee && (
+        <DeleteConfirmationModal
+          employeeName={deletingEmployee.fullName}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
         />
       )}
     </div>

@@ -8,6 +8,7 @@ import {
   getEmployees,
 } from '@/utils/storage';
 import EmployeeTable from '@/components/EmployeeTable';
+import Loader from '@/components/Loader';
 
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,7 +29,7 @@ export default function DashboardPage() {
   const inactiveEmployees = totalEmployees - activeEmployees;
 
   if (!isAuthenticated()) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
@@ -37,91 +38,85 @@ export default function DashboardPage() {
         <h2 className="mb-6 text-lg font-semibold text-gray-900 sm:text-xl">
           Quick Overview
         </h2>
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-xl bg-white p-6 shadow-md transition duration-200 hover:shadow-lg sm:p-8">
-            <div className="flex items-center space-x-4">
-              <div className="shrink-0">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100">
-                  <svg
-                    className="h-6 w-6 text-indigo-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-2a6 6 0 0112 0v2zm0 0h6v-2a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                    />
-                  </svg>
-                </div>
+        <div className="grid grid-cols-3 gap-3 sm:gap-6">
+          <div className="rounded-lg bg-white p-3 sm:p-6 shadow-md transition duration-200 hover:shadow-lg sm:rounded-xl">
+            <div className="flex flex-col md:flex-row md:gap-4 items-center space-y-2 md:space-y-0 text-center md:text-left">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 sm:h-12 sm:w-12">
+                <svg
+                  className="h-5 w-5 text-indigo-600 sm:h-6 sm:w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-2a6 6 0 0112 0v2zm0 0h6v-2a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                  />
+                </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-xs font-medium text-gray-600 sm:text-sm">
                   Total Employees
                 </p>
-                <p className="mt-2 text-3xl font-bold text-gray-900">
+                <p className="text-xl font-bold text-gray-900 sm:text-3xl">
                   {totalEmployees}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-xl bg-white p-6 shadow-md transition duration-200 hover:shadow-lg sm:p-8">
-            <div className="flex items-center space-x-4">
-              <div className="shrink-0">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                  <svg
-                    className="h-6 w-6 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                    />
-                  </svg>
-                </div>
+          <div className="rounded-lg bg-white p-3 sm:p-6 shadow-md transition duration-200 hover:shadow-lg sm:rounded-xl">
+            <div className="flex flex-col md:flex-row md:gap-4 items-center space-y-2 md:space-y-0 text-center md:text-left">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 sm:h-12 sm:w-12">
+                <svg
+                  className="h-5 w-5 text-green-600 sm:h-6 sm:w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                  />
+                </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-xs font-medium text-gray-600 sm:text-sm">
                   Active Employees
                 </p>
-                <p className="mt-2 text-3xl font-bold text-gray-900">
+                <p className="text-xl font-bold text-gray-900 sm:text-3xl">
                   {activeEmployees}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-xl bg-white p-6 shadow-md transition duration-200 hover:shadow-lg sm:p-8">
-            <div className="flex items-center space-x-4">
-              <div className="shrink-0">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100">
-                  <svg
-                    className="h-6 w-6 text-red-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                    />
-                  </svg>
-                </div>
+          <div className="rounded-lg bg-white p-3 sm:p-6 shadow-md transition duration-200 hover:shadow-lg sm:rounded-xl">
+            <div className="flex flex-col md:flex-row md:gap-4 items-center space-y-2 md:space-y-0 text-center md:text-left">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 sm:h-12 sm:w-12">
+                <svg
+                  className="h-5 w-5 text-red-600 sm:h-6 sm:w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                  />
+                </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-xs font-medium text-gray-600 sm:text-sm">
                   Inactive Employees
                 </p>
-                <p className="mt-2 text-3xl font-bold text-gray-900">
+                <p className="text-xl font-bold text-gray-900 sm:text-3xl">
                   {inactiveEmployees}
                 </p>
               </div>
