@@ -51,7 +51,7 @@ Follow these steps to set up the project locally:
 #### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/rupeshbisen/employee-management-dashboard.git
 cd employee-management-dashboard
 ```
 
@@ -202,14 +202,22 @@ The production build will:
 ```
 src/
 ├── app/
-│   ├── dashboard/
+│   ├── (main)/
+│   │   ├── dashboard/
+│   │   └── layout.tsx
 │   ├── login/
+│   ├── favicon.ico
+│   ├── globals.css
 │   ├── layout.tsx
-│   ├── page.tsx
-│   └── globals.css
+│   └── page.tsx
 ├── components/
+│   ├── DeleteConfirmationModal.tsx
 │   ├── EmployeeForm.tsx
-│   └── EmployeeTable.tsx
+│   ├── EmployeeTable.tsx
+│   ├── Footer.tsx
+│   ├── Header.tsx
+│   ├── Loader.tsx
+│   └── Modal.tsx
 ├── types/
 │   └── employee.ts
 └── utils/
