@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Employee } from '@/types/employee';
 import { getEmployees, saveEmployees } from '@/utils/storage';
@@ -118,7 +118,7 @@ export default function EmployeeTable({
           </div>
           <div className="no-print flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <button
-              className="inline-flex items-center justify-center rounded-lg border border-transparent bg-linear-to-r from-indigo-600 to-indigo-700 px-4 py-2.5 text-sm font-medium text-white transition duration-200 hover:from-indigo-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="inline-flex items-center justify-center rounded-lg border border-transparent bg-linear-to-r from-indigo-600 to-indigo-700 px-4 py-2.5 text-sm font-medium text-white transition duration-200 hover:from-indigo-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:scale-95"
               onClick={handleAdd}
             >
               <svg
@@ -137,7 +137,7 @@ export default function EmployeeTable({
               Add Employee
             </button>
             <button
-              className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:scale-95"
               onClick={handlePrint}
             >
               <svg
@@ -160,7 +160,14 @@ export default function EmployeeTable({
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-x-auto print:overflow-visible print:w-full"
+        id="printable-table"
+      >
+        {/* Print Only Header */}
+        <div className="hidden print:block mb-8 text-center">
+          <h1 className="text-3xl font-bold text-black">Employee List</h1>
+        </div>
         <table className="w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -173,19 +180,19 @@ export default function EmployeeTable({
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 sm:px-6">
                 Name
               </th>
-              <th className="hidden px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 md:table-cell sm:px-6">
+              <th className="hidden px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 md:table-cell print:table-cell sm:px-6">
                 Gender
               </th>
-              <th className="hidden px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 lg:table-cell sm:px-6">
+              <th className="hidden px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 lg:table-cell print:table-cell sm:px-6">
                 DOB
               </th>
-              <th className="hidden px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 md:table-cell sm:px-6">
+              <th className="hidden px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 md:table-cell print:table-cell sm:px-6">
                 State
               </th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 sm:px-6">
                 Status
               </th>
-              <th className="no-print px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 sm:px-6">
+              <th className="no-print px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700 print:hidden sm:px-6">
                 Actions
               </th>
             </tr>
@@ -255,17 +262,17 @@ export default function EmployeeTable({
                   <td className="whitespace-nowrap px-4 py-4 text-sm font-semibold text-gray-900 sm:px-6">
                     {employee.fullName}
                   </td>
-                  <td className="hidden whitespace-nowrap px-4 py-4 text-sm text-gray-600 md:table-cell sm:px-6">
+                  <td className="hidden whitespace-nowrap px-4 py-4 text-sm text-gray-600 md:table-cell print:table-cell sm:px-6">
                     {employee.gender}
                   </td>
-                  <td className="hidden whitespace-nowrap px-4 py-4 text-sm text-gray-600 lg:table-cell sm:px-6">
+                  <td className="hidden whitespace-nowrap px-4 py-4 text-sm text-gray-600 lg:table-cell print:table-cell sm:px-6">
                     {new Date(employee.dob).toLocaleDateString('en-US', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
                     })}
                   </td>
-                  <td className="hidden whitespace-nowrap px-4 py-4 text-sm text-gray-600 md:table-cell sm:px-6">
+                  <td className="hidden whitespace-nowrap px-4 py-4 text-sm text-gray-600 md:table-cell print:table-cell sm:px-6">
                     {employee.state}
                   </td>
                   <td className="whitespace-nowrap px-4 py-4 sm:px-6">
@@ -281,10 +288,10 @@ export default function EmployeeTable({
                       {employee.isActive ? 'Active' : 'Inactive'}
                     </button>
                   </td>
-                  <td className="no-print whitespace-nowrap px-4 py-4 text-sm font-medium sm:px-6">
+                  <td className="no-print whitespace-nowrap px-4 py-4 text-sm font-medium print:hidden sm:px-6">
                     <div className="flex gap-2">
                       <button
-                        className="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 transition duration-200 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 transition duration-200 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:scale-95"
                         onClick={() => handleEdit(employee)}
                         title="Edit employee"
                       >
@@ -304,7 +311,7 @@ export default function EmployeeTable({
                         Edit
                       </button>
                       <button
-                        className="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition duration-200 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                        className="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition duration-200 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 active:scale-95"
                         onClick={() => handleDeleteClick(employee)}
                         title="Delete employee"
                       >

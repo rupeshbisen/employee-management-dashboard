@@ -3,7 +3,6 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --color-black: rgba(44, 43, 43, 1);
 }
 
 @theme inline {
@@ -25,17 +24,18 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom form styling */
-input,
-select,
-textarea {
-  @apply transition-all duration-200;
+/* Base styles for better print and screen rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Custom form styling - minimal overrides */
 input:focus,
 select:focus,
 textarea:focus {
-  @apply ring-2 ring-indigo-500;
+  outline: 2px solid var(--color-indigo-500);
+  outline-offset: 1px;
 }
 
 /* Custom scrollbar */
@@ -45,80 +45,77 @@ textarea:focus {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100;
+  background-color: #f3f4f6;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-gray-300 hover:bg-gray-400;
+  background-color: #d1d5db;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
 }
 
 /* Print styles */
 @media print {
-  .no-print {
-    display: none !important;
+  /* Set page size to auto and remove margin to hide browser headers/footers */
+  @page {
+    margin: 0;
+    size: auto;
   }
 
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show the printable table and its children */
+  #printable-table,
+  #printable-table * {
+    visibility: visible;
+  }
+
+  /* Position the table, reset margins, and add padding for page margins */
+  #printable-table {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 1cm 2cm !important;
+  }
+
+  /* Ensure body doesn't constrain height */
   body {
-    font-size: 12px;
-    @apply bg-white;
+    height: auto !important;
+    overflow: visible !important;
   }
 
+  /* Basic table styling for print */
   table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 100% !important;
+    border-collapse: collapse !important;
   }
 
   th,
   td {
-    border: 1px solid #000;
-    padding: 8px;
-    @apply text-left;
+    border: 1px solid #e5e7eb !important;
+    /* gray-200 */
+    padding: 8px !important;
+    text-align: left;
+    color: #000 !important;
   }
 
   th {
-    @apply bg-gray-100 font-bold;
+    background-color: #f3f4f6 !important;
+    /* gray-100 */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
-  /* Hide images in print mode except necessary ones */
-  img {
-    max-width: 50px;
-  }
-
-  /* Ensure no page breaks in the middle of rows */
+  /* Prevent row breaking */
   tr {
     page-break-inside: avoid;
   }
-}
-
-/* Responsive utilities */
-@media (max-width: 640px) {
-  body {
-    @apply text-sm;
-  }
-
-  h1 {
-    @apply text-2xl;
-  }
-
-  h2 {
-    @apply text-xl;
-  }
-}
-
-/* Button transition effects */
-button {
-  @apply transition-all duration-200 ease-in-out;
-}
-
-button:active {
-  @apply scale-95;
-}
-
-/* Card hover effects */
-.card-hover {
-  @apply transition-all duration-300;
-}
-
-.card-hover:hover {
-  @apply -translate-y-1 shadow-lg;
 }
